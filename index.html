@@ -102,9 +102,11 @@
   </div>
 
   <div class="alert alert-warning mb-0" role="alert" style="margin-top:2.2rem">
-    <strong>Key insight:</strong> guidance turns two noisy estimates of the posterior mean into one prediction that
-    carries the posterior's mean <em>and</em> covariance. Choosing the scale that matches the data's variance
-    recovers the scales practitioners picked by hand.
+    <strong>Key insight:</strong> we propose a closed-form rule that chooses the guidance scale so that the guided
+    predictions match the data's variance; it recovers the scales used in practice across many models.
+    <div class="mt-2"><strong>Our interpretation:</strong> each model makes a random error in predicting the posterior
+    mean, and these errors scatter like a scaled-down copy of the posterior covariance. Guidance rescales the difference
+    of two such errors into a sample with the posterior's covariance, which improves sampling.</div>
   </div>
 
   <!-- TL;DR -->
@@ -114,11 +116,16 @@
       <p class="text-muted small mb-2">Skip to
         <a href="#how">How it works</a> &rarr; <a href="#rule">The rule</a> &rarr;
         <a href="#results">Results</a> &rarr; <a href="#citing">Citing</a></p>
-      <p>We propose a closed-form rule that chooses the guidance scale so that the guided predictions match the
-        data's variance; it recovers the scales used in practice across many models.</p>
-      <p><strong>Our interpretation:</strong> each model makes a random error in predicting the posterior mean, and
-        these errors scatter like a scaled-down copy of the posterior covariance. Guidance rescales the difference of two
-        such errors into a sample with the posterior's covariance, which improves sampling.</p>
+      <p>Classifier-free guidance and autoguidance push a diffusion model's prediction away from a weaker one,
+        <span class="text-nowrap">\(D_w = D_0 + w\,(D_1 - D_0)\)</span>. Everyone uses it, and the scale \(w\) is tuned by hand. We find that:</p>
+      <ul>
+        <li>At the scales used in practice, guidance makes the prediction of the posterior mean <em>worse</em>, while samples get better.</li>
+        <li>Posterior-mean predictions have less variance than the data, and guidance restores it.</li>
+        <li>Picking \(w\) so that the guided predictions vary as much as the data recovers the published scales of
+          <strong>eleven models</strong> across image, video, audio, motion and world generation, with no tuning.</li>
+        <li>Each model's error scatters like a scaled-down copy of the posterior covariance; guidance scales the
+          difference of two such errors back up to a sample of the posterior.</li>
+      </ul>
     </div>
   </section>
 
